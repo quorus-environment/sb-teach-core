@@ -20,6 +20,8 @@ class User(BaseModel):
     mail = CharField(max_length=30)
     username = CharField(max_length=256)
     password = CharField(max_length=256)
+    avatar = CharField(max_length=256)
+
 
 
 User.create_table(db)

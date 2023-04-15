@@ -19,6 +19,7 @@ def get_profile(data: UserTokenData):
         "last_name": user.third_name,
         "second_name": user.second_name,
         "role": user.role,
+        "image": user.avatar
     }
 
     return jsonify(profile)
