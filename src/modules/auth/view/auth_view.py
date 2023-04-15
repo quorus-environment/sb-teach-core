@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from flask import Blueprint, jsonify
+from flask_cors import cross_origin
 from flask_pydantic import validate
 import jwt
 
@@ -12,6 +13,7 @@ auth_view = Blueprint('auth', __name__, url_prefix="/auth")
 
 
 @auth_view.route('/sign-up', methods=["POST"])
+@cross_origin(supports_credentials=True)
 @validate()
 def sign_up(body: SignUpRequest):
     User.create(
@@ -30,6 +32,7 @@ def sign_up(body: SignUpRequest):
 
 
 @auth_view.route('/sign-in', methods=["POST"])
+@cross_origin(supports_credentials=True)
 @validate()
 def sign_in(body: SignInRequest):
     user = User.get(User.username == body.username)
@@ -41,10 +44,14 @@ def sign_in(body: SignInRequest):
 
 
 @auth_view.route("/refresh", methods=["POST"])
+@cross_origin(supports_credentials=True)
 @validate()
 def refresh():
     from flask import request
-    token = request.headers.get("Authorization").split(" ")[1]
+    try:
+        token = request.headers.get("Authorization").split(" ")[1]
+    except AttributeError as e:
+        return jsonify({"error": "Unauthorized"}), 403
     data = jwt.decode(token, "qwerty", algorithms="HS256")
     user = User.get(User.id == data.get("id"))
     token = create_token(str(user.id), user.username)

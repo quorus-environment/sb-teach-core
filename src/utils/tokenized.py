@@ -8,7 +8,7 @@ from src.modules.auth.model.user_token_data import UserTokenData
 
 def get_data_by_token():
     try:
-        token = request.headers["authorization"].split(" ")[1]
+        token = request.headers["Authorization"].split(" ")[1]
     except KeyError:
         raise ValueError("Unauthorized")
 
@@ -16,7 +16,7 @@ def get_data_by_token():
         raise ValueError("Unauthorized")
 
     try:
-        data = jwt.decode(token, "secret", algorithms="HS256")
+        data = jwt.decode(token, "qwerty", algorithms="HS256")
     except Exception as e:
         raise ValueError("Unauthorized")
 

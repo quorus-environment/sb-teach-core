@@ -16,7 +16,7 @@ def get_profile(data: UserTokenData):
         "id": data.id,
         "username": user.username,
         "first_name": user.first_name,
-        "last_name": user.last_name,
+        "last_name": user.third_name,
         "second_name": user.second_name,
         "role": user.role,
     }
