@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from src.modules.auth.model.user_model import User
 from src.modules.auth.model.user_token_data import UserTokenData
-from src.utils.tokenized import tokenized
+from src.utils.tokenized import tokenized, get_data_by_token
 
 users_view = Blueprint('users', __name__, url_prefix="/users")
 
@@ -39,7 +39,13 @@ class SaveAddInfoRequest(BaseModel):
 @cross_origin(supports_credentials=True)
 @validate()
 def save_additional_info(body: SaveAddInfoRequest):
+    token_data: UserTokenData = get_data_by_token()
     spec = ["frontend", "backend"] if body.category == "fullstack" else [body.category]
-    User.update(specializations=spec, framework=body.framework, about=body.about).where(User.id == "123")
+    try:
+        User.get(User.id == token_data.id)
+    except Exception as e:
+        print(e)
+        return "Unauthorized", 403
+    User.update(specializations=spec, framework=body.framework, about=body.about).where(User.id == token_data.id)
     return "Saved successfully"
 

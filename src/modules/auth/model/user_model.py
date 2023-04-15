@@ -22,11 +22,21 @@ class User(BaseModel):
     role = CharField(max_length=30, null=True)
 
     specializations = ArrayField(TextField, default=[])
-    framework: CharField(max_length=128)
-    about: CharField(max_length=256)
+    framework = CharField(max_length=128, null=True)
+    about = CharField(max_length=256, null=True)
     is_tested = BooleanField(default=False)
 
-    mail = CharField(max_length=30)
+    education = CharField(max_length=256, null=True)
+    vuz = CharField(max_length=256, null=True)
+    experience = CharField(max_length=256, null=True)
+    github_link = CharField(max_length=256, null=True)
+    birthday = CharField(max_length=256, null=True)
+    city = CharField(max_length=256, null=True)
+
+    invitations = ArrayField(CharField, default=[])
+    rating = IntegerField(default=0)
+
+    mail = CharField(max_length=64, null=True)
     username = CharField(max_length=256)
     password = CharField(max_length=256)
     avatar = CharField(max_length=256, null=True)
