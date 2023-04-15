@@ -1,4 +1,5 @@
 import os
+import uuid
 from datetime import datetime, timedelta
 
 from flask import Blueprint, jsonify
@@ -19,6 +20,7 @@ auth_view = Blueprint('auth', __name__, url_prefix="/auth")
 @validate()
 def sign_up(body: SignUpRequest):
     User.create(
+        id=uuid.uuid4(),
         first_name=body.first_name,
         second_name=body.last_name,
         third_name=body.second_name,
