@@ -9,4 +9,4 @@ class SignUpRequest(BaseModel):
 
     first_name: str
     last_name: str
-    second_name: str
+    second_name: str | None

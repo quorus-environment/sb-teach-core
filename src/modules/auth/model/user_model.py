@@ -1,8 +1,7 @@
 from peewee import *
 import uuid
 
-
-db = SqliteDatabase('data.db')
+from src.db import db
 
 
 class BaseModel(Model):
@@ -19,8 +18,8 @@ class User(BaseModel):
     third_name = CharField(max_length=30, null=True)
     role = CharField(max_length=30, null=True)
     mail = CharField(max_length=30)
-    username = CharField()
-    password = CharField()
+    username = CharField(max_length=256)
+    password = CharField(max_length=256)
 
 
 User.create_table(db)

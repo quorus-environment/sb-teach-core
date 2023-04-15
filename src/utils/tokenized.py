@@ -35,6 +35,6 @@ def tokenized(func):
             data = get_data_by_token()
         except ValueError:
             return "Unauthorized", 403
-        return func(*args, **kwargs, UserTokenData(data.get("id"), data.get("username")))
+        return func(UserTokenData(data.get("id"), data.get("username")), *args, **kwargs)
 
     return wrapper

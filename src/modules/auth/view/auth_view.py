@@ -11,39 +11,33 @@ from src.modules.auth.model.user_model import User
 auth_view = Blueprint('auth', __name__, url_prefix="/auth")
 
 
-# Регистрация
 @auth_view.route('/sign-up', methods=["POST"])
 @validate()
 def sign_up(body: SignUpRequest):
-    # Тут нужно создать нового пользователя с определенной ролью и
-    # сгенерить токен и отправить его на фронт
-
     User.create(
         first_name=body.first_name,
-        second_name=body.second_name,
+        second_name=body.last_name,
         third_name=body.second_name,
         role=body.role,
         mail=body.email,
         username=body.username,
         password=body.password
-    ),
+    )
+    user = User.get(User.username == body.username)
 
-    token = create_token(User.id, User.username)
-    return jsonify({"token": token, "role": User.role, "id": User.id})
+    token = create_token(str(user.id), user.username)
+    return jsonify({"token": token, "role": user.role, "id": str(user.id)})
 
 
 @auth_view.route('/sign-in', methods=["POST"])
 @validate()
 def sign_in(body: SignInRequest):
-    # Тут проверяем пароль, сравниваем с бд
-    User.get().where(User.username == body.username)
-    if body.password == User.password:
-        return User.id
+    user = User.get(User.username == body.username)
+    if body.password != user.password:
+        return "Unauthorized", 403
 
-    # Генерим токен с данными о пользователе и отправляем на фронт вместе с ролью и айди
-
-    token = create_token(User.id, User.username)
-    return jsonify({"token": token, "role": User.role, "id": User.id})
+    token = create_token(str(user.id), user.username)
+    return jsonify({"token": token, "role": user.role, "id": str(user.id)})
 
 
 @auth_view.route("/refresh", methods=["POST"])
@@ -53,15 +47,18 @@ def refresh():
     token = request.headers.get("Authorization").split(" ")[1]
     data = jwt.decode(token, "qwerty", algorithms="HS256")
     user = User.get(User.id == data.get("id"))
-    token = create_token(user.id, user.username)
-    return jsonify({"token": token, "role": user.role, "id": user.id, "exp": datetime.now() + timedelta(minutes=30)})
+    token = create_token(str(user.id), user.username)
+    return jsonify({"token": token,
+                    "role": user.role,
+                    "id": user.id})
 
 
 def create_token(user_id, username):
     token = jwt.encode(
         {
             "id": user_id,
-            "username": username
+            "username": username,
+            "exp": datetime.utcnow() + timedelta(hours=1)
         },
         "qwerty",
         algorithm="HS256")

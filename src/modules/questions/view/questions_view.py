@@ -12,6 +12,6 @@ questions_view = Blueprint('questions', __name__, url_prefix="/questions")
 @questions_view.route('/get_questions', methods=["GET"])
 @validate()
 @tokenized
-def get_questions(body: GetQuestionsRequest):
+def get_questions(data: UserTokenData, body: GetQuestionsRequest):
     questions = QuestionModel.select().where(QuestionModel.technology == body.technology)
     return questions
