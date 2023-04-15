@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/sb-teach-core.iml" filepath="$PROJECT_DIR$/.idea/sb-teach-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../tuuub/.idea/tuuub.iml" filepath="$PROJECT_DIR$/../tuuub/.idea/tuuub.iml" />
     </modules>
   </component>
 </project>

@@ -10,7 +10,7 @@ def sign_in():
     return jsonify({"token": "token"})
 
 @auth_view.route('/sign-up', methods=["POST"])
-def sign_in():
+def sign_up():
     # Тут проверяем пароль, сравниваем с бд
     # Генерим токен с данными о пользователе и отправляем на фронт вместе с ролью и айди
     return jsonify({"token": "token"})
