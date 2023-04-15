@@ -18,7 +18,7 @@ def get_data_by_token():
 
     try:
         data = jwt.decode(token, os.environ.get("JWT_SECRET"), algorithms="HS256")
-    except Exception as e:
+    except jwt.exceptions.ExpiredSignatureError as e:
         raise ValueError("Unauthorized")
 
     if data.get("id") is None:

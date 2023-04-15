@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify
 from flask_cors import cross_origin
 from flask_pydantic import validate
 import jwt
+from peewee import DoesNotExist
 
 from src.modules.auth.model.sign_in_request import SignInRequest
 from src.modules.auth.model.sign_up_request import SignUpRequest
@@ -36,7 +37,10 @@ def sign_up(body: SignUpRequest):
 @cross_origin(supports_credentials=True)
 @validate()
 def sign_in(body: SignInRequest):
-    user = User.get(User.username == body.username)
+    try:
+        user = User.get(User.username == body.username)
+    except DoesNotExist:
+        return "Unauthorized", 403
     if body.password != user.password:
         return "Unauthorized", 403
 
@@ -53,8 +57,14 @@ def refresh():
         token = request.headers.get("Authorization").split(" ")[1]
     except AttributeError as e:
         return jsonify({"error": "Unauthorized"}), 403
-    data = jwt.decode(token, os.environ.get("JWT_SECRET"), algorithms="HS256")
-    user = User.get(User.id == data.get("id"))
+    try:
+        data = jwt.decode(token, os.environ.get("JWT_SECRET"), algorithms="HS256")
+    except jwt.exceptions.ExpiredSignatureError:
+        return jsonify({"error": "Unauthorized"}), 403
+    try:
+        user = User.get(User.id == data.get("id"))
+    except DoesNotExist:
+        return jsonify({"error": "Unauthorized"}), 403
     token = create_token(str(user.id), user.username)
     return jsonify({"token": token,
                     "role": user.role,
