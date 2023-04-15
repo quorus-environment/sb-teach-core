@@ -5,6 +5,7 @@ from flask_cors import cross_origin
 from flask_pydantic import validate
 from random import shuffle
 from peewee import fn
+from pydantic import BaseModel
 
 from src.modules.auth.model.user_token_data import UserTokenData
 from src.modules.questions.model.get_questions_request import GetQuestionsRequest, SetQuestionRequest
@@ -50,3 +51,32 @@ def set_question(body: SetQuestionRequest):
         print(e)
         return "Internal Server Error", 500
     return jsonify({"status": "done"})
+
+
+class QuestionToValid(BaseModel):
+    uuid: str
+    answer: int
+
+
+class ValidateRequest(BaseModel):
+    answers: list[QuestionToValid]
+
+
+@questions_view.route('/validate_question', methods=["POST"])
+@cross_origin(supports_credentials=True)
+@validate()
+def validate(body: ValidateRequest):
+    try:
+        correct = 0
+        for question in body.answers:
+            print(question.answer)
+            print(QuestionModel.get(QuestionModel.id == question.uuid).answer)
+            if str(question.answer) == str(QuestionModel.get(QuestionModel.id == question.uuid).answer):
+                correct += 1
+                continue
+            else:
+                continue
+        return jsonify({"rating": correct / len(body.answers) * 100})
+    except Exception as e:
+        print(e)
+        return "Internal Server Error", 500
