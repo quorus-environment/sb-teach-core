@@ -33,8 +33,8 @@ class User(BaseModel):
     birthday = CharField(max_length=256, null=True)
     city = CharField(max_length=256, null=True)
 
-    invitations = ArrayField(CharField, default=[])
-    rating = IntegerField(default=0)
+    invitations = ArrayField(CharField, default=[], null=True)
+    rating = IntegerField(default=0, null=True)
 
     mail = CharField(max_length=64, null=True)
     username = CharField(max_length=256)
