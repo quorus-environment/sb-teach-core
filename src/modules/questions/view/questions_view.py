@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask_pydantic import validate
+import peewee as pw
 
 from src.modules.auth.model.user_token_data import UserTokenData
 from src.modules.questions.model.get_questions_request import GetQuestionsRequest
@@ -15,3 +16,12 @@ questions_view = Blueprint('questions', __name__, url_prefix="/questions")
 def get_questions(data: UserTokenData, body: GetQuestionsRequest):
     questions = QuestionModel.select().where(QuestionModel.technology == body.technology)
     return questions
+
+
+@questions_view.route('/get_question_set', methods=["GET"])
+@validate()
+@tokenized
+def get_question_set(data: UserTokenData, body: GetQuestionsRequest):
+    question_set = QuestionModel.select().order_by(
+        pw.fn.Rand()).limit(15).where(QuestionModel.technology == body.technology)
+    return question_set

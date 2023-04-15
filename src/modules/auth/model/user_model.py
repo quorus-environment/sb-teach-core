@@ -23,5 +23,4 @@ class User(BaseModel):
     avatar = CharField(max_length=256)
 
 
-
 User.create_table(db)
