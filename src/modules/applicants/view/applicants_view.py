@@ -11,5 +11,5 @@ applicants_view = Blueprint('applicants', __name__, url_prefix="/applicants")
 @cross_origin(supports_credentials=True)
 @validate()
 def get_applicants():
-    applicants = User.select().where(User.is_tested)
-    return jsonify({"applicants": list(applicants)})
+    applicants = User.select().where(User.is_tested).dicts()
+    return jsonify({"applicants": [app for app in applicants]})

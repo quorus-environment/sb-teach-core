@@ -12,7 +12,7 @@ from src.modules.questions.model.question_model import QuestionModel
 from src.modules.questions.view.questions_view import questions_view
 
 from src.modules.technology.model.technology_model import TechnologyModel
-
+from src.modules.technology.view.technology_view import technology_view
 
 load_dotenv()
 app = Flask(__name__)
@@ -27,5 +27,6 @@ if __name__ == "__main__":
     app.register_blueprint(applicants_view, url_prefix="/applicants")
     app.register_blueprint(users_view, url_prefix="/users")
     app.register_blueprint(questions_view, url_prefix="/questions")
+    app.register_blueprint(technology_view, url_prefix="/technology")
 
     app.run(port=8080)
