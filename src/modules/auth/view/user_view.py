@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+from flask_cors import cross_origin
 
 from src.modules.auth.model.user_model import User
 from src.modules.auth.model.user_token_data import UserTokenData
@@ -8,6 +9,7 @@ users_view = Blueprint('users', __name__, url_prefix="/users")
 
 
 @users_view.route('/get_profile_info')
+@cross_origin(supports_credentials=True)
 @tokenized
 def get_profile(data: UserTokenData):
     user = User.get(User.id == data.id)
