@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify
 from flask_pydantic import validate
-import sqlite3
 import jwt
 
 from src.modules.auth.model.sign_in_request import SignInRequest
@@ -18,41 +17,40 @@ def sign_up(body: SignUpRequest):
     # сгенерить токен и отправить его на фронт
 
     User.create(
-                first_name=body.first_name,
-                second_name=body.second_name,
-                third_name=body.third_name,
-                role=body.role,
-                mail=body.mail,
-                username=body.username,
-                password=body.password
-            ),
+        first_name=body.first_name,
+        second_name=body.second_name,
+        third_name=body.third_name,
+        role=body.role,
+        mail=body.mail,
+        username=body.username,
+        password=body.password
+    ),
 
-    token = jwt.encode(
-        {
-            "id": User.id,
-            "username": User.username
-        },
-        "qwerty",
-        algorithm="HS256")
+    token = create_token(User.id, User.username)
     return jsonify({"token": token})
 
 
 @auth_view.route('/sign-in', methods=["POST"])
 @validate()
 def sign_in(body: SignInRequest):
-
     # Тут проверяем пароль, сравниваем с бд
     User.get().where(User.username == body.username)
     if body.password == User.password:
         return User.id
 
     # Генерим токен с данными о пользователе и отправляем на фронт вместе с ролью и айди
+
+    token = create_token(User.id, User.username)
+    return jsonify({"token": token})
+
+
+def create_token(id, username):
     token = jwt.encode(
         {
-            "id": User.id,
-            "username": User.username
+            "id": id,
+            "username": username
         },
         "qwerty",
         algorithm="HS256")
 
-    return jsonify({"token": token})
+    return token
