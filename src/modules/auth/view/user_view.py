@@ -32,7 +32,7 @@ def get_profile(data: UserTokenData):
 class SaveAddInfoRequest(BaseModel):
     category: str
     framework: str
-    about: str
+    about: str | None
 
 
 @users_view.route('/save_additional_info', methods=["POST"])
