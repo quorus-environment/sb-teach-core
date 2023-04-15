@@ -28,6 +28,3 @@ class User(BaseModel):
     username = CharField(max_length=256)
     password = CharField(max_length=256)
     avatar = CharField(max_length=256, null=True)
-
-
-User.create_table()
