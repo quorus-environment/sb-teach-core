@@ -27,3 +27,9 @@ def set_technology(body: SetTechnologyRequest):
         print(e)
         return "Internal Server Error", 500
     return jsonify({"status": "done"})
+
+
+@technology_view.route('/get_technologies', methods=["GET"])
+@cross_origin(supports_credentials=True)
+def get_technology():
+    return jsonify({"technologies": [tech for tech in TechnologyModel.select().dicts()]})

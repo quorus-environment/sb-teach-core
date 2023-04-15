@@ -3,6 +3,7 @@ import uuid
 from flask import Blueprint, jsonify
 from flask_cors import cross_origin
 from flask_pydantic import validate
+from random import shuffle
 from peewee import fn
 
 from src.modules.auth.model.user_token_data import UserTokenData
@@ -21,12 +22,14 @@ def get_questions(data: UserTokenData, body: GetQuestionsRequest):
     return questions
 
 
-@questions_view.route('/get_question_set', methods=["GET"])
+@questions_view.route('/get_question_set', methods=["POST"])
+@cross_origin(supports_credentials=True)
 @validate()
-@tokenized
-def get_question_set(data: UserTokenData, body: GetQuestionsRequest):
-    question_set = QuestionModel.select().where(QuestionModel.technology == body.technology).order_by(fn.Rand()).limit(15)
-    return question_set
+def get_question_set(body: GetQuestionsRequest):
+    question_set = QuestionModel.select().where(QuestionModel.technology == body.technology).limit(15).dicts()
+    arr = [q for q in question_set]
+    shuffle(arr)
+    return jsonify({"questions": arr})
 
 
 @questions_view.route('/set_question', methods=["POST"])

@@ -39,13 +39,16 @@ class SaveAddInfoRequest(BaseModel):
 @cross_origin(supports_credentials=True)
 @validate()
 def save_additional_info(body: SaveAddInfoRequest):
-    token_data: UserTokenData = get_data_by_token()
+    token_data = get_data_by_token()
     spec = ["frontend", "backend"] if body.category == "fullstack" else [body.category]
     try:
-        User.get(User.id == token_data.id)
+        User.get(User.id == token_data.get("id"))
     except Exception as e:
         print(e)
         return "Unauthorized", 403
-    User.update(specializations=spec, framework=body.framework, about=body.about).where(User.id == token_data.id)
+    print(token_data.get("id"))
+    print([user.id for user in User.select().where(User.id == token_data.get("id"))])
+    User.update(specializations=spec, framework=body.framework, about=body.about).where(User.id == token_data.get("id"))\
+        .execute()
     return "Saved successfully"
 
