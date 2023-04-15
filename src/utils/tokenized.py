@@ -29,12 +29,12 @@ def get_data_by_token():
 # decorator for checking token validity
 def tokenized(func):
     @wraps(func)
-    def wrapper():
+    def wrapper(*args, **kwargs):
         # get user data by token
         try:
             data = get_data_by_token()
         except ValueError:
             return "Unauthorized", 403
-        return func(UserTokenData(data.get("id"), data.get("username")))
+        return func(*args, **kwargs, UserTokenData(data.get("id"), data.get("username")))
 
     return wrapper
