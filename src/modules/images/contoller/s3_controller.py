@@ -12,7 +12,7 @@ class S3Exception(Exception):
 
 class S3Controller:
     s3client: BaseClient = None
-    _bucket: str = "tuuub"
+    _bucket: str = "sb-teach"
 
     def __init__(self):
         self.s3client = boto3.client('s3', region_name='eu-north-1',

@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 from flask import Blueprint, jsonify
@@ -52,7 +53,7 @@ def refresh():
         token = request.headers.get("Authorization").split(" ")[1]
     except AttributeError as e:
         return jsonify({"error": "Unauthorized"}), 403
-    data = jwt.decode(token, "qwerty", algorithms="HS256")
+    data = jwt.decode(token, os.environ.get("JWT_SECRET"), algorithms="HS256")
     user = User.get(User.id == data.get("id"))
     token = create_token(str(user.id), user.username)
     return jsonify({"token": token,
@@ -67,7 +68,7 @@ def create_token(user_id, username):
             "username": username,
             "exp": datetime.utcnow() + timedelta(hours=1)
         },
-        "qwerty",
+        os.environ.get("JWT_SECRET"),
         algorithm="HS256")
 
     return token

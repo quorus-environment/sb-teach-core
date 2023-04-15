@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
 
+from dotenv import load_dotenv
+
 from src.db import db
 from src.modules.auth.model.user_model import User
 from src.modules.auth.view.auth_view import auth_view
@@ -10,6 +12,8 @@ from src.modules.questions.view.questions_view import questions_view
 
 from src.modules.technology.model.technoloy_model import TechnologyModel
 
+
+load_dotenv()
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
