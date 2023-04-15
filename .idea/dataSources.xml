@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://95.182.121.35:5432/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="data" uuid="ac2f8f94-69a3-4c96-bcfb-7268ec7a9300">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\alexd\PycharmProjects\sb-teach-core\sb-teach-core\src\modules\auth\model\data.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

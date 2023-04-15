@@ -22,6 +22,8 @@ class User(BaseModel):
     role = CharField(max_length=30, null=True)
 
     specializations = ArrayField(TextField, default=[])
+    framework: CharField(max_length=128)
+    about: CharField(max_length=256)
     is_tested = BooleanField(default=False)
 
     mail = CharField(max_length=30)
