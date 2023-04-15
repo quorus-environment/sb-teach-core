@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import cross_origin
 from flask_pydantic import validate
+from pydantic import BaseModel
 
-from src.modules.auth.model.user_model import User, BaseModel
+from src.modules.auth.model.user_model import User
 from src.modules.auth.model.user_token_data import UserTokenData
 from src.utils.tokenized import tokenized
 
@@ -34,12 +35,11 @@ class SaveAddInfoRequest(BaseModel):
     about: str
 
 
-@users_view.route('/save_additional_info')
+@users_view.route('/save_additional_info', methods=["POST"])
 @cross_origin(supports_credentials=True)
 @validate()
-@tokenized
-def save_additional_info(token_data: UserTokenData, body: SaveAddInfoRequest):
+def save_additional_info(body: SaveAddInfoRequest):
     spec = ["frontend", "backend"] if body.category == "fullstack" else [body.category]
-    User.update(specializations=spec, framework=body.framework, about=body.about).where(User.id == token_data.id)
+    User.update(specializations=spec, framework=body.framework, about=body.about).where(User.id == "123")
     return "Saved successfully"
 

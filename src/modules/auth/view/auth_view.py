@@ -30,8 +30,9 @@ def sign_up(body: SignUpRequest):
     user = User.get(User.username == body.username)
 
     token = create_token(str(user.id), user.username)
-    return jsonify({"token": token, "role": user.role, "id": str(user.id), "name": user.first_name + user.second_name,
-                    "is_tested": user.is_tested, "spec": user.specializations})
+    return jsonify(
+        {"token": token, "role": user.role, "id": str(user.id), "name": user.first_name + " " + user.second_name,
+         "is_tested": user.is_tested, "spec": user.specializations})
 
 
 @auth_view.route('/sign-in', methods=["POST"])
@@ -46,8 +47,9 @@ def sign_in(body: SignInRequest):
         return "Unauthorized", 403
 
     token = create_token(str(user.id), user.username)
-    return jsonify({"token": token, "role": user.role, "id": str(user.id), "name": user.first_name + user.second_name,
-                    "is_tested": user.is_tested, "spec": user.specializations})
+    return jsonify(
+        {"token": token, "role": user.role, "id": str(user.id), "name": user.first_name + " " + user.second_name,
+         "is_tested": user.is_tested, "spec": user.specializations})
 
 
 @auth_view.route("/refresh", methods=["POST"])
@@ -70,7 +72,7 @@ def refresh():
     token = create_token(str(user.id), user.username)
     return jsonify({"token": token,
                     "role": user.role,
-                    "id": user.id, "name": user.first_name + user.second_name,
+                    "id": user.id, "name": user.first_name + " " + user.second_name,
                     "is_tested": user.is_tested, "spec": user.specializations})
 
 
