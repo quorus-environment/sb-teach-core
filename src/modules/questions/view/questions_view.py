@@ -15,3 +15,5 @@ questions_view = Blueprint('questions', __name__, url_prefix="/questions")
 def get_questions(data: UserTokenData, body: GetQuestionsRequest):
     questions = QuestionModel.select().where(QuestionModel.technology == body.technology)
     return questions
+
+

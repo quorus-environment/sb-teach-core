@@ -1,3 +1,4 @@
+import os
 from functools import wraps
 
 import jwt
@@ -16,7 +17,7 @@ def get_data_by_token():
         raise ValueError("Unauthorized")
 
     try:
-        data = jwt.decode(token, "qwerty", algorithms="HS256")
+        data = jwt.decode(token, os.environ.get("JWT_SECRET"), algorithms="HS256")
     except Exception as e:
         raise ValueError("Unauthorized")
 
