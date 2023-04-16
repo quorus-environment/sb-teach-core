@@ -19,7 +19,7 @@ class User(BaseModel):
     first_name = CharField(max_length=30)
     second_name = CharField(max_length=30)
     third_name = CharField(max_length=30, null=True)
-    role = CharField(max_length=30, null=True)
+    role = ArrayField(CharField, default=[])
 
     specializations = ArrayField(TextField, default=[])
     framework = CharField(max_length=128, null=True)
