@@ -17,6 +17,6 @@ def get_applicants():
 @cross_origin(supports_credentials=True)
 def get_mentors():
     mentors = User.select().dicts()
-    mentors = [mentor for mentor in filter(lambda x: "mentor" in x.roles, mentors)]
+    mentors = [mentor for mentor in filter(lambda x: "mentor" in x.get("role"), mentors)]
     return jsonify({"mentors": [mentor for mentor in mentors]})
 
